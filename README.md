@@ -1,7 +1,3 @@
-A professional README.md is essential for the IT team to understand the deployment and for your supervisor to see the project's value.
-
-Here is a comprehensive README in English, tailored for a GitHub repository.
-
 Meta IOR - Warranty Claim Form Generator
 📌 Project Overview
 The Meta IOR Warranty Tool is a front-end solution designed to streamline the warranty claim process for Luxottica Meta products in the Mexican market.
