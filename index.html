@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxottica - Registro de Garantía Meta México</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        :root { --lux-black: #000; --lux-gray: #f8f8f8; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eee; margin: 0; }
+        .page { background: #fff; width: 850px; margin: 20px auto; padding: 40px; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+        .header { background: #000; color: #fff; padding: 30px; text-align: center; margin: -40px -40px 30px -40px; }
+        .header h1 { letter-spacing: 8px; font-weight: 300; margin: 0; }
+        section { margin-bottom: 25px; border-top: 1px solid #eee; padding-top: 15px; }
+        h2 { font-size: 14px; text-transform: uppercase; color: #666; letter-spacing: 2px; margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 4px; color: #333; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; font-size: 13px; outline: none; }
+        .photo-card { border: 1px solid #ddd; padding: 15px; text-align: center; page-break-inside: avoid; background: #fff; margin-bottom: 20px;}
+        .photo-card span { display: block; font-size: 12px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .preview-box { width: 100%; height: 350px; background: #f0f0f0; border: 1px dashed #bbb; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; color: #999; font-size: 12px; overflow: hidden; }
+        .preview-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .no-print { display: block; margin: 10px auto; }
+        .btn-main { background: #000; color: #fff; padding: 20px 50px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; transition: 0.3s; }
+        .btn-main:hover { background: #333; }
+        .conditional-box { display: none; margin-top: 20px; border-left: 5px solid #000; padding-left: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="render-area" class="page">
+    <div class="header"><h1>LUXOTTICA</h1></div>
+
+    <form id="warrantyForm">
+        <section>
+            <h2>1. Información del Cliente y Domicilio</h2>
+            <div class="grid">
+                <div class="field-group"><label>Nombre y Apellido</label><input type="text" id="userName" required></div>
+                <div class="field-group"><label>Correo Electrónico</label><input type="email" id="userEmail" required></div>
+                <div class="field-group"><label>Calle y Número</label><input type="text" required></div>
+                <div class="field-group"><label>Colonia</label><input type="text" required></div>
+                <div class="field-group"><label>Municipio / Alcaldía</label><input type="text" required></div>
+                <div class="field-group"><label>Código Postal</label><input type="text" required></div>
+                <div class="field-group"><label>Estado</label><input type="text" required></div>
+                <div class="field-group"><label>Teléfono de Contacto</label><input type="tel" required></div>
+            </div>
+            <div class="field-group" style="margin-top:15px;"><label>Referencias y Horario de Entrega</label><input type="text" required></div>
+        </section>
+
+        <section>
+            <h2>2. Detalles del Producto</h2>
+            <div class="grid">
+                <div class="field-group"><label>Modelo (Ej: RW4008)</label><input type="text" required></div>
+                <div class="field-group"><label>Número de Serie (S/N)</label><input type="text" required></div>
+                <div class="field-group"><label>Fecha de Compra</label><input type="date" required></div>
+                <div class="field-group"><label>Tienda o Distribuidor</label><input type="text" required></div>
+            </div>
+            <div class="field-group" style="margin-top:15px;"><label>Descripción Detallada del Defecto</label><textarea rows="3" required></textarea></div>
+        </section>
+
+        <section>
+            <h2>3. Evidencia Fotográfica Obligatoria</h2>
+            <div class="photo-grid" id="photo-container"></div>
+        </section>
+
+        <section>
+            <h2>4. Confirmación Final</h2>
+            <div class="field-group">
+                <label>¿Presenta alguna grieta o fisura?</label>
+                <select id="sel_grieta" onchange="handleGrieta(this.value)" required>
+                    <option value="">Seleccione...</option>
+                    <option value="No">No</option>
+                    <option value="Sí">Sí</option>
+                </select>
+            </div>
+            
+            <div id="box_grieta" class="conditional-box">
+                <div class="photo-card">
+                    <span>Foto de la Grieta / Fisura</span>
+                    <div class="preview-box" id="box-v_grieta">
+                        <img id="img-v_grieta" style="display:none;">
+                        <p id="txt-v_grieta" style="color:#999; font-size:11px;">Suba la foto detallada de la grieta aquí.</p>
+                    </div>
+                    <input type="file" id="in_grieta" class="no-print" accept="image/*" onchange="loadImg(this, 'v_grieta')">
+                </div>
+            </div>
+        </section>
+    </form>
+
+    <div style="text-align: center; padding: 20px; border-top: 2px solid #000; font-weight: bold; font-size: 14px;">
+        ENVIAR A: garantiameta.mx@br.luxottica.com
+    </div>
+</div>
+
+<div style="max-width: 850px; margin: 0 auto 50px auto;">
+    <button onclick="generatePDF()" class="btn-main" id="btn-gen">DESCARGAR PDF PARA GARANTÍA</button>
+</div>
+
+<script>
+    /**
+     * IT DOCUMENTATION:
+     * Photo list configuration for automatic generation.
+     */
+    const fotos = [
+        {id: 'factura', label: '0. Comprobante de Compra (Factura/Ticket)', ref: 'factura.jpg'},
+        {id: 'frontal', label: '1. Foto Frontal del Armazón', ref: 'frontal.jpg'},
+        {id: 'int_der', label: '2. Lado Interior Derecho', ref: 'ladointeriorderecho.jpg'},
+        {id: 'int_izq', label: '3. Lado Interior Izquierdo', ref: 'ladointeriorizquierdo.jpg'},
+        {id: 'ext_der', label: '4. Lateral Externo Derecho', ref: 'lateralderechoexterno.jpg'},
+        {id: 'ext_izq', label: '5. Lateral Externo Izquierdo', ref: 'lateralexteriorizquierdo.jpg'},
+        {id: 'var_der_sup', label: '6. Varilla Derecha Superior', ref: 'varilladerechasuperior.jpg'},
+        {id: 'var_der_inf', label: '7. Varilla Derecha Inferior', ref: 'varillainferiorderecha.jpg'},
+        {id: 'var_izq_inf', label: '8. Varilla Izquierda Inferior', ref: 'varillainferiorizquierda.jpg'},
+        {id: 'var_izq_sup', label: '9. Varilla Izquierda Superior', ref: 'varillasuperiorizquierda.jpg'}
+    ];
+
+    const container = document.getElementById('photo-container');
+    fotos.forEach(f => {
+        container.innerHTML += `
+            <div class="photo-card">
+                <span>${f.label}</span>
+                <div class="preview-box" id="box-${f.id}">
+                    <img id="img-${f.id}" src="${f.ref}" crossorigin="anonymous" onerror="this.style.display='none';">
+                    <p id="txt-${f.id}" style="color:#999; font-size:11px;">Haga clic abajo para subir la foto real.</p>
+                </div>
+                <input type="file" class="no-print" accept="image/*" onchange="loadImg(this, '${f.id}')" required>
+            </div>
+        `;
+    });
+
+    /**
+     * handleGrieta: Toggles visibility and requirement for the crack photo field.
+     */
+    function handleGrieta(val) {
+        const box = document.getElementById('box_grieta');
+        const input = document.getElementById('in_grieta');
+        if (val === 'Sí') {
+            box.style.display = 'block';
+            input.required = true;
+        } else {
+            box.style.display = 'none';
+            input.required = false;
+        }
+    }
+
+    function loadImg(input, fid) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.getElementById('img-' + fid);
+                const txt = document.getElementById('txt-' + fid);
+                img.src = e.target.result;
+                img.style.display = "block";
+                if(txt) txt.style.display = "none";
+                document.getElementById('box-' + fid).style.background = "#fff";
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function generatePDF() {
+        const form = document.getElementById('warrantyForm');
+        if (!form.checkValidity()) {
+            alert("Por favor, complete todos los campos obligatorios.");
+            form.reportValidity();
+            return;
+        }
+
+        const nameVal = document.getElementById('userName').value.trim() || "User";
+        const emailVal = document.getElementById('userEmail').value.trim() || "Email";
+        const fileName = `Meta IOR - ${nameVal} - ${emailVal}.pdf`;
+
+        const btn = document.getElementById('btn-gen');
+        btn.innerText = "GENERANDO ARCHIVO...";
+        btn.disabled = true;
+
+        const renderArea = document.getElementById('render-area');
+        const noPrintElements = document.querySelectorAll('.no-print');
+        noPrintElements.forEach(el => el.style.display = 'none');
+
+        const opt = {
+            margin: 0,
+            filename: fileName,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+
+        try {
+            await html2pdf().set(opt).from(renderArea).save();
+        } catch (e) {
+            console.error("IT LOG - PDF Gen Error:", e);
+            alert("Error al generar el PDF.");
+        } finally {
+            noPrintElements.forEach(el => el.style.display = 'block');
+            btn.innerText = "DESCARGAR PDF PARA GARANTÍA";
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
