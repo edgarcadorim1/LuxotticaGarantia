@@ -36,13 +36,10 @@ Clone this repository.
 
 Ensure the reference images (e.g., frontal.jpg, factura.jpg) are in the root directory.
 
-The project is a static site. It can be hosted on:
+The project is a static site. It is hosted on:
 
 GitHub Pages
 
-Netlify / Vercel
-
-Internal Amazon S3 Bucket or Azure Static Web Apps.
 
 Configuration
 The fotos object in the JavaScript section allows for easy modification of required photos, labels, or reference paths without changing the HTML structure.
